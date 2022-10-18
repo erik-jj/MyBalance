@@ -46,8 +46,15 @@ const RegisterSchema = {
 };
 
 class Register extends Model {
-  static assocciate() {
-    //
+  static assocciate(models) {
+    this.belongsTo(models.User, {
+      as: 'user',
+      foreignKey: 'idUser',
+    });
+    this.belongsTo(models.Reason, {
+      as: 'reason',
+      foreignKey: 'idReason',
+    });
   }
 
   static config(sequelize) {
