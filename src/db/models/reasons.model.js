@@ -39,8 +39,11 @@ const ReasonsSchema = {
 };
 
 class Reason extends Model {
-  static assocciate() {
-    //
+  static assocciate(models) {
+    this.belongsTo(models.User, {
+      as: 'user',
+      foreignKey: 'idUser',
+    });
   }
 
   static config(sequelize) {

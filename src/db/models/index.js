@@ -8,6 +8,11 @@ function setupModels(sequelize) {
   Recurring.init(RecurringSchema, Recurring.config(sequelize));
   Register.init(RegisterSchema, Register.config(sequelize));
   User.init(UserSchema, User.config(sequelize));
+
+  Reason.assocciate(sequelize.models);
+  Recurring.assocciate(sequelize.models);
+  Register.assocciate(sequelize.models);
+
 }
 
 export default setupModels;
