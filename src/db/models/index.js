@@ -1,7 +1,8 @@
-import { ReasonsSchema, Reason } from './reasons.model.js';
-import { RecurringSchema, Recurring } from './recurring.model.js';
-import { RegisterSchema, Register } from './registers.model.js';
-import { UserSchema, User } from './users.model.js';
+const { ReasonsSchema, Reason } = require( './reasons.model.js)';
+const { RecurringSchema, Recurring } = require( './recurring.model.js');
+const { RegisterSchema, Register } = require( './registers.model.js');
+const { UserSchema, User } = require( './users.model.js');
+
 
 function setupModels(sequelize) {
   Reason.init(ReasonsSchema, Reason.config(sequelize));
@@ -9,5 +10,4 @@ function setupModels(sequelize) {
   Register.init(RegisterSchema, Register.config(sequelize));
   User.init(UserSchema, User.config(sequelize));
 }
-
-export default setupModels;
+module.exports = setupModels;

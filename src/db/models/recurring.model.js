@@ -1,6 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
-import { USERS_TABLE } from './users.model';
-import { REASONS_TABLE } from './reasons.model';
+const { Model, DataTypes } = require('sequelize');
+const { USERS_TABLE } = require('./users.model.js');
+const { REASONS_TABLE } = require('./reasons.model.js');
 
 const RECURRING_TABLE = 'recurring';
 
@@ -78,4 +78,4 @@ class Recurring extends Model {
   }
 }
 
-export default { RECURRING_TABLE, RecurringSchema, Recurring };
+module.exports = { RECURRING_TABLE, RecurringSchema, Recurring };

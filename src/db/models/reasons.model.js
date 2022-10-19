@@ -1,9 +1,9 @@
-import { Model, DataTypes } from 'sequelize';
-import { USERS_TABLE } from './users.model';
+const { Model, DataTypes } = require('sequelize');
+const { USERS_TABLE } = require('./users.model.js');
 
 const REASONS_TABLE = 'reasons';
 
-const ReasonsSchema = {
+const ReasonSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -56,4 +56,4 @@ class Reason extends Model {
   }
 }
 
-export default { REASONS_TABLE, ReasonsSchema, Reason };
+module.exports = { REASONS_TABLE, ReasonSchema, Reason };
