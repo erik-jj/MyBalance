@@ -30,8 +30,19 @@ const UserSchema = {
 };
 
 class User extends Model {
-  static assocciate() {
-    //
+  static assocciate(models) {
+    this.hasMany(models.Reason, {
+      as: 'reason',
+      foreignKey: 'idUser',
+    });
+    this.hasMany(models.Recurring, {
+      as: 'recurring',
+      foreignKey: 'idUser',
+    });
+    this.hasMany(models.Register, {
+      as: 'register',
+      foreignKey: 'idUser',
+    });
   }
 
   static config(sequelize) {

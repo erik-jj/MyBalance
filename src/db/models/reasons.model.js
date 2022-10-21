@@ -44,13 +44,21 @@ class Reason extends Model {
       as: 'user',
       foreignKey: 'idUser',
     });
+    this.hasMany(models.Recurring, {
+      as: 'recurring',
+      foreignKey: 'idReason',
+    });
+    this.hasMany(models.Register, {
+      as: 'register',
+      foreignKey: 'idReason',
+    });
   }
 
   static config(sequelize) {
     return {
       sequelize,
       tableName: REASONS_TABLE,
-      modelName: 'Reasons',
+      modelName: 'Reason',
       timestamps: false,
     };
   }
