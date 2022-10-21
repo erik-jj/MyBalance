@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 
-import reasonsRouter from './reasons.router.js';
-import recurringRouter from './recurring.router.js';
-import registersRouter from './registers.router.js';
-import usersRouter from './users.router.js';
+const reasonsRouter = require('./reasons.router.js');
+const recurringRouter = require('./recurring.router.js');
+const registersRouter = require('./registers.router.js');
+const usersRouter = require('./users.router.js');
 
 function routerApi(app) {
   const router = express.Router();

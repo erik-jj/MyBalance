@@ -1,7 +1,6 @@
-import express from 'express';
-import cors from 'cors';
-import routerApi from './routes/index.js';
-
+const express = require('express');
+const cors = require('cors');
+const routerApi = require('./routes/index.js');
 
 const port = process.env.PORT || 3000;
 const app = express();

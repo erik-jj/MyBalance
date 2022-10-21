@@ -1,6 +1,6 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
-import { USERS_TABLE } from './users.model';
-import { REASONS_TABLE } from './reasons.model';
+const { Model, DataTypes, Sequelize } = require('sequelize');
+const { USERS_TABLE } = require('./users.model.js');
+const { REASONS_TABLE } = require('./reasons.model.js');
 
 const REGISTERS_TABLE = 'registers';
 
@@ -67,4 +67,4 @@ class Register extends Model {
   }
 }
 
-export default { REGISTERS_TABLE, RegisterSchema, Register };
+module.exports = { REGISTERS_TABLE, RegisterSchema, Register };
