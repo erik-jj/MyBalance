@@ -14,4 +14,4 @@ function routerApi(app) {
   app.use('/registers', registersRouter);
 }
 
-export default routerApi;
+module.exports = routerApi;
