@@ -16,11 +16,9 @@ const RecurringSchema = {
     type: DataTypes.DECIMAL,
     defaultValue: 0,
   },
-  estimatedAmount: {
+  pending: {
     allowNull: false,
-    type: DataTypes.DECIMAL,
-    field: 'estimated_amount',
-    defaultValue: 0,
+    type: DataTypes.BOOLEAN,
   },
   nextCreationDate: {
     allowNull: false,
