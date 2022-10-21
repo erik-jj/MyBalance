@@ -29,7 +29,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.patch('/id', async (req, res, next) => {
+router.patch(':/id', async (req, res, next) => {
   try {
     //logic
     res.json();

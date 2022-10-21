@@ -1,5 +1,6 @@
 const { models } = require('../libs/sequelize.js');
 const hashPassword = require('../utils/pass-hash');
+const boom = require('@hapi/boom');
 
 class UserService {
   constructor() {}
@@ -17,7 +18,7 @@ class UserService {
   async findById(id) {
     const user = await models.User.findByPk(id);
     if (!user) {
-      //boom error
+      throw boom.notFound('user not found');
     }
     return user;
   }
@@ -27,7 +28,7 @@ class UserService {
       where: { email },
     });
     if (!user) {
-      //boom error
+      throw boom.notFound('user not found');
     }
     return user;
   }
@@ -39,7 +40,7 @@ class UserService {
   }
 
   async delete(id) {
-    const user = await this.findOne(id);
+    const user = await this.findById(id);
     await user.destroy();
     return { id };
   }
