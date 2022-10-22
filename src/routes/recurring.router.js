@@ -1,28 +1,23 @@
 const express = require('express');
-
-const router = express.Router();
+const RecurringService = require('../services/recurring.service');
 const validatorHandler = require('../middlewares/validator.handler.js');
 const {
   updateRecurringSchema,
   createRecurringSchema,
   getRecurringSchema,
 } = require('../schemas/recurring.schema');
-router.get('/', async (req, res, next) => {
-  try {
-    //logic
-    res.json();
-  } catch (error) {
-    next(error);
-  }
-});
+
+const router = express.Router();
+const service = new RecurringService();
 
 router.get(
   '/:id',
   validatorHandler(getRecurringSchema, 'params'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const { id } = req.params;
+      const recurring = await service.findById(id);
+      res.json(recurring);
     } catch (error) {
       next(error);
     }
@@ -31,11 +26,12 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(createRecurringSchema, 'params'),
+  validatorHandler(createRecurringSchema, 'body'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const body = req.body;
+      const newRecurring = await service.create(body);
+      res.json(newRecurring);
     } catch (error) {
       next(error);
     }
@@ -43,13 +39,15 @@ router.post(
 );
 
 router.patch(
-  ':/id',
+  '/:id',
   validatorHandler(getRecurringSchema, 'params'),
   validatorHandler(updateRecurringSchema, 'body'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const body = req.body;
+      const { id } = req.params;
+      const recurring = await service.update(id, body);
+      res.json(recurring);
     } catch (error) {
       next(error);
     }
@@ -61,8 +59,9 @@ router.delete(
   validatorHandler(getRecurringSchema, 'params'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const { id } = req.params;
+      const recurring = await service.delete(id);
+      res.json(recurring);
     } catch (error) {
       next(error);
     }

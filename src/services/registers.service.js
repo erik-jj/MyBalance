@@ -1,34 +1,31 @@
 const { models } = require('../libs/sequelize.js');
+const boom = require('@hapi/boom');
 
 class RegisterService {
   constructor() {}
 
   async create(data) {
+    if (data.amount == 0) {
+      data.pending = true;
+    }
     const newRegister = await models.Register.create(data);
     return newRegister;
   }
 
   async findById(id) {
-    const register = await models.Register.findByPk(id);
+    const register = await models.Register.findByPk(id, {
+      include: [
+        {
+          association: 'reason',
+          attributes: ['isIncome', 'name'],
+        },
+      ],
+    });
     if (!register) {
-      //boom error
+      throw boom.notFound('Register not found');
     }
     return register;
   }
-
-  // async findByUserId(userId) {
-  //   const registers = await models.Register.findAll({
-  //     where: {
-  //       '$user.id$': userId,
-  //     },
-  //     include: [
-  //       {
-  //         association: 'user',
-  //       },
-  //     ],
-  //   });
-  //   return registers;
-  // }
 
   async update(id, changes) {
     const register = await this.findById(id);

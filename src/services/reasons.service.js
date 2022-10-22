@@ -1,4 +1,5 @@
 const { models } = require('../libs/sequelize.js');
+const boom = require('@hapi/boom');
 
 class ReasonService {
   constructor() {}
@@ -8,27 +9,28 @@ class ReasonService {
     return newReason;
   }
 
-  async findById(id) {
-    const reason = await models.Reason.findById(id);
-    if (!reason) {
-      //boom error
+  async findByUserId(userId) {
+    const user = await models.User.findByPk(userId);
+    if (!user) {
+      throw boom.notFound('User not found');
     }
-    return reason;
+    const reasons = await models.Reason.findAll({
+      where: {
+        idUser: userId,
+        isActive: true,
+      },
+    });
+    return reasons;
   }
 
-  // async findByUserId(userId) {
-  //   const reasons = await models.Reason.findAll({
-  //     where: {
-  //       '$user.id$': userId,
-  //     },
-  //     include: [
-  //       {
-  //         association: 'user',
-  //       },
-  //     ],
-  //   });
-  //   return reasons;
-  // }
+  async findById(id) {
+    const reason = await models.Reason.findByPk(id);
+    if (!reason) {
+      throw boom.notFound('Reason not found');
+    }
+    delete reason.dataValues.isActive;
+    return reason;
+  }
 
   async update(id, changes) {
     const reason = await this.findById(id);
@@ -36,9 +38,9 @@ class ReasonService {
     return rta;
   }
 
-  async delete(id) {
+  async deactivate(id) {
     const reason = await this.findById(id);
-    await reason.destroy();
+    await reason.update({ isActive: false });
     return { id };
   }
 }

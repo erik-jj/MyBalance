@@ -3,7 +3,7 @@ const Joi = require('joi');
 const id = Joi.number().integer();
 const name = Joi.string().max(15).min(3);
 const isIncome = Joi.boolean();
-const isActive = Joi.boolean();
+//const isActive = Joi.boolean();
 const idUser = Joi.number().integer();
 
 const createReasonSchema = Joi.object({
@@ -14,7 +14,7 @@ const createReasonSchema = Joi.object({
 
 const updateReasonSchema = Joi.object({
   name: name,
-  isActive: isActive,
+  isIncome: isIncome,
 });
 
 const getReasonSchema = Joi.object({

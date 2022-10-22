@@ -1,5 +1,8 @@
 const express = require('express');
+const RegisterService = require('../services/registers.service');
+
 const router = express.Router();
+const service = new RegisterService();
 const validatorHandler = require('../middlewares/validator.handler.js');
 const {
   updateRegisterSchema,
@@ -7,22 +10,14 @@ const {
   getRegisterSchema,
 } = require('../schemas/register.schema');
 
-router.get('/', async (req, res, next) => {
-  try {
-    //logic
-    res.json();
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.get(
   '/:id',
   validatorHandler(getRegisterSchema, 'params'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const { id } = req.params;
+      const register = await service.findById(id);
+      res.json(register);
     } catch (error) {
       next(error);
     }
@@ -31,11 +26,12 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(createRegisterSchema, 'params'),
+  validatorHandler(createRegisterSchema, 'body'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const body = req.body;
+      const newRegister = await service.create(body);
+      res.json(newRegister);
     } catch (error) {
       next(error);
     }
@@ -48,8 +44,10 @@ router.patch(
   validatorHandler(updateRegisterSchema, 'body'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const body = req.body;
+      const { id } = req.params;
+      const register = await service.update(id, body);
+      res.json(register);
     } catch (error) {
       next(error);
     }
@@ -61,8 +59,9 @@ router.delete(
   validatorHandler(getRegisterSchema, 'params'),
   async (req, res, next) => {
     try {
-      //logic
-      res.json();
+      const { id } = req.params;
+      const register = await service.delete(id);
+      res.json(register);
     } catch (error) {
       next(error);
     }

@@ -13,23 +13,24 @@ const RecurringSchema = {
   },
   amount: {
     allowNull: false,
-    type: DataTypes.DECIMAL,
+    type: DataTypes.DECIMAL(7,2),
     defaultValue: 0,
   },
   pending: {
     allowNull: false,
     type: DataTypes.BOOLEAN,
+    defaultValue: true,
   },
   nextCreationDate: {
     allowNull: false,
     type: DataTypes.DATE,
     field: 'next_creation_date',
   },
-  lastCreationDate: {
-    allowNull: false,
-    type: DataTypes.DATE,
-    field: 'last_creation_date',
-  },
+  // lastCreationDate: {
+  //   allowNull: false,
+  //   type: DataTypes.DATE,
+  //   field: 'last_creation_date',
+  // },
   idUser: {
     allowNull: false,
     type: DataTypes.INTEGER,

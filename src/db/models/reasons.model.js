@@ -10,19 +10,19 @@ const ReasonSchema = {
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  name: {
-    allowNull: false,
-    type: DataTypes.STRING,
-  },
   isIncome: {
     allowNull: false,
     type: DataTypes.BOOLEAN,
     field: 'is_income',
   },
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
   isActive: {
     allowNull: false,
     type: DataTypes.BOOLEAN,
-    default: true,
+    defaultValue: true,
     field: 'is_active',
   },
   idUser: {

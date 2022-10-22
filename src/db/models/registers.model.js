@@ -21,6 +21,11 @@ const RegisterSchema = {
     field: 'create_at',
     defaultValue: Sequelize.NOW,
   },
+  pending: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   idUser: {
     allowNull: false,
     type: DataTypes.INTEGER,
