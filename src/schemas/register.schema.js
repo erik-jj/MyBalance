@@ -5,6 +5,9 @@ const amount = Joi.number().min(0).max(9999999);
 const idReason = Joi.number().integer();
 const idUser = Joi.number().integer();
 
+const month = Joi.number().integer().min(1).max(12);
+const year = Joi.number().integer().min(2020).max(2050);
+
 const createRegisterSchema = Joi.object({
   amount: amount.required(),
   idReason: idReason.required(),
@@ -20,8 +23,16 @@ const getRegisterSchema = Joi.object({
   id: id.required(),
 });
 
+const queryRegisterSchema = Joi.object({
+  month: month,
+  year: year,
+})
+  .with('month', 'year')
+  .with('year', 'month');
+
 module.exports = {
   createRegisterSchema,
   updateRegisterSchema,
   getRegisterSchema,
+  queryRegisterSchema,
 };

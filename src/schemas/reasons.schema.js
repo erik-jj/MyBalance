@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const id = Joi.number().integer();
-const name = Joi.string().max(15).min(3);
+const name = Joi.string().max(20).min(3);
 const isIncome = Joi.boolean();
 //const isActive = Joi.boolean();
 const idUser = Joi.number().integer();
@@ -20,6 +20,7 @@ const updateReasonSchema = Joi.object({
 const getReasonSchema = Joi.object({
   id: id.required(),
 });
+
 
 module.exports = {
   createReasonSchema,

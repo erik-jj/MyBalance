@@ -1,5 +1,7 @@
 const { models } = require('../libs/sequelize.js');
 const boom = require('@hapi/boom');
+const { Op } = require('sequelize');
+const moment = require('moment');
 
 class RecurringService {
   constructor() {}
@@ -31,6 +33,31 @@ class RecurringService {
       },
     });
     return recurring;
+  }
+
+  //for cron
+  async findTodayRecurring() {
+    const todayInit = moment().utcOffset(0).startOf('day').toDate();
+    const todayEnd = moment().utcOffset(0).add(1, 'd').startOf('day').toDate();
+    const registers = await models.Recurring.findAll(
+      {
+        where: {
+          next_creation_date: {
+            [Op.lte]: todayEnd,
+            [Op.gte]: todayInit,
+          },
+        },
+      },
+      {
+        include: [
+          {
+            association: 'reason',
+            attributes: ['isIncome', 'name'],
+          },
+        ],
+      }
+    );
+    return registers;
   }
 
   async update(id, changes) {

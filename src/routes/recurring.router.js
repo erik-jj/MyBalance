@@ -24,6 +24,20 @@ router.get(
   }
 );
 
+
+// router.get(
+//   '/today-recurring',
+//   async (req, res, next) => {
+//     try {
+//       const recurring = await service.findTodayRecurring();
+//       res.json(recurring);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+
+
 router.post(
   '/',
   validatorHandler(createRecurringSchema, 'body'),
