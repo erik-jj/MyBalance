@@ -23,7 +23,7 @@ const options = {
   },
 };
 app.use(express.json());
-
+require('./utils/auth/index');
 app.use(cors(options));
 
 routerApi(app);
