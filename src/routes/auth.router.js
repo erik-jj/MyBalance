@@ -12,6 +12,8 @@ router.post(
       const user = req.user;
       const payload = {
         sub: user.id,
+        username: user.username,
+        email: user.email,
       };
       const token = signToken(payload);
       res.json({
