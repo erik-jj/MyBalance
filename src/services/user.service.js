@@ -28,13 +28,18 @@ class UserService {
       where: { email },
     });
     if (!user) {
-      throw boom.notFound('user not found');
+      throw boom.unauthorized();
     }
     return user;
   }
 
   async update(id, changes) {
     const user = await this.findById(id);
+    const { password } = changes;
+    if (password) {
+      const hash = await hashPassword(password);
+      changes.password = hash;
+    }
     const rta = await user.update(changes);
     return rta;
   }

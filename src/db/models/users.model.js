@@ -11,11 +11,16 @@ const UserSchema = {
   email: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true,
+    unique: 'column',
   },
   password: {
     allowNull: false,
     type: DataTypes.STRING,
+  },
+  recoveryToken: {
+    allowNull: true,
+    type: DataTypes.STRING,
+    field: 'recovery_token',
   },
   username: {
     allowNull: false,
