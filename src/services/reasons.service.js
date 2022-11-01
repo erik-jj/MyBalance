@@ -14,6 +14,9 @@ class ReasonService {
     if (!user) {
       throw boom.notFound('User not found');
     }
+    if (!user.verified) {
+      throw boom.notFound('user not found');
+    }
     const reasons = await models.Reason.findAll({
       where: {
         idUser: userId,

@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
 const config = {
-  env: process.env.NODE_ENV || "dev",
+  env: process.env.NODE_ENV || 'dev',
   port: process.env.PORT || 3000,
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
@@ -12,9 +12,10 @@ const config = {
   apiKey: process.env.API_KEY,
   jwtSecretAccount: process.env.JWT_SECRET_ACC,
   jwtSecretRecovery: process.env.JWT_SECRET_REC,
-
+  jwtSecretVerify: process.env.JWT_SECRET_VER,
   emailUser: process.env.EMAIL_USER,
   emailPassword: process.env.EMAIL_PASSWORD,
+  url: process.env.URL,
 };
 
 module.exports = { config };

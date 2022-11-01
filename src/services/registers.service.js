@@ -2,6 +2,8 @@ const { models, fn, where, col } = require('../libs/sequelize.js');
 const { Op } = require('sequelize');
 const boom = require('@hapi/boom');
 const moment = require('moment');
+const UserService = require('./user.service');
+const service = new UserService();
 
 class RegisterService {
   constructor() {}
@@ -30,9 +32,12 @@ class RegisterService {
   }
 
   async findRegisters(userId, query) {
-    const user = await models.User.findByPk(userId);
+    const user = await service.findByPk(userId);
     if (!user) {
       throw boom.notFound('User not found');
+    }
+    if (!user.verified) {
+      throw boom.notFound('user not found');
     }
     const options = {
       month: moment().month() + 1,

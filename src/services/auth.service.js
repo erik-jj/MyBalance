@@ -6,7 +6,8 @@ const { config } = require('../config/config.js');
 const signTokenAccount = require('../utils/jwt/token-sign-account');
 const signTokenRecovery = require('../utils/jwt/token-sign-recovery');
 const tokenVerifyRecovery = require('../utils/jwt/token-verify-recovery');
-
+const signTokenEmail = require('../utils/jwt/token-sign-email');
+const tokenVerifyEmail = require('../utils/jwt/token-verify-email');
 const service = new UserService();
 class AuthService {
   constructor() {}
@@ -53,6 +54,45 @@ class AuthService {
     return { message: 'mail sent' };
   }
 
+  async sendEmailVerification(email) {
+    const user = await service.findByEmailUnverified(email);
+    if (!user) {
+      throw boom.unauthorized();
+    }
+    const payload = { sub: user.id };
+    const token = signTokenEmail(payload);
+    const link = `${config.url}email-verification?token=${token}`;
+    await service.update(user.id, { emailToken: token });
+    const mail = {
+      from: config.emailUser,
+      to: user.email,
+      subject: 'Verificación de correo',
+      html: `<b>Ingresa a este link para verificar tu correo =>${link}</b>`,
+    };
+    const rta = await this.sendMail(mail);
+    return rta;
+  }
+
+  async verifyEmail(token) {
+    try {
+      const payload = tokenVerifyEmail(token);
+      const user = await service.findById(payload.sub);
+      if (!user) {
+        throw boom.unauthorized('invalid user');
+      }
+      if (user.emailToken !== token) {
+        throw boom.unauthorized('Invalid token');
+      }
+      await service.update(user.id, {
+        verified: true,
+        emailToken: null,
+      });
+      return { message: 'account verified' };
+    } catch (error) {
+      throw boom.unauthorized();
+    }
+  }
+
   async sendRecovery(email) {
     const user = await service.findByEmail(email);
     if (!user) {
@@ -60,7 +100,7 @@ class AuthService {
     }
     const payload = { sub: user.id };
     const token = signTokenRecovery(payload);
-    const link = `http://myfrontend.com/recovery?token=${token}`;
+    const link = `${config.url}recovery?token=${token}`;
     await service.update(user.id, { recoveryToken: token });
     const mail = {
       from: config.emailUser, // sender address

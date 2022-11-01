@@ -27,6 +27,9 @@ class RecurringService {
     if (!user) {
       throw boom.notFound('User not found');
     }
+    if (!user.verified) {
+      throw boom.notFound('user not found');
+    }
     const recurring = await models.Recurring.findAll({
       where: {
         idUser: userId,

@@ -25,7 +25,18 @@ class UserService {
 
   async findByEmail(email) {
     const user = await models.User.findOne({
-      where: { email },
+      where: { email, verified: true },
+    });
+
+    if (!user) {
+      throw boom.unauthorized();
+    }
+    return user;
+  }
+
+  async findByEmailUnverified(email) {
+    const user = await models.User.findOne({
+      where: { email, verified: false },
     });
     if (!user) {
       throw boom.unauthorized();

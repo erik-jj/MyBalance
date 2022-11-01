@@ -21,7 +21,7 @@ const getUserSchema = Joi.object({
   id: id.required(),
 });
 
-const passRecoverySchema = Joi.object({
+const emailReqSchema = Joi.object({
   email: email.required(),
 });
 
@@ -29,10 +29,16 @@ const passChangeSchema = Joi.object({
   password: password.required(),
   token: token.required(),
 });
+
+const emailValidationSchema = Joi.object({
+  token: token.required(),
+});
+
 module.exports = {
   createUserSchema,
   updateUserSchema,
   getUserSchema,
-  passRecoverySchema,
+  emailReqSchema,
   passChangeSchema,
+  emailValidationSchema,
 };

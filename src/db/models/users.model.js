@@ -17,6 +17,16 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  verified: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  emailToken: {
+    allowNull: true,
+    type: DataTypes.STRING,
+    field: 'email_token',
+  },
   recoveryToken: {
     allowNull: true,
     type: DataTypes.STRING,
