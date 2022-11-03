@@ -1,15 +1,14 @@
 const express = require('express');
 const passport = require('passport');
 const validatorHandler = require('../middlewares/validator.handler.js');
-const {
-  emailReqSchema,
-  passChangeSchema,
-  emailValidationSchema,
-} = require('../schemas/user.schema');
+const { emailReqSchema, passChangeSchema } = require('../schemas/user.schema');
 const AuthService = require('../services/auth.service');
+const UserService = require('../services/user.service');
+
 const router = express.Router();
 
-const service = new AuthService();
+const authService = new AuthService();
+const userService = new UserService();
 
 router.post(
   '/login',
@@ -17,7 +16,11 @@ router.post(
   async (req, res, next) => {
     try {
       const user = req.user;
-      res.json(service.signTokenAccount(user));
+      if (user.verified) {
+        res.json(await authService.signTokenAccount(user));
+      } else {
+        res.json(await userService.sendEmailVerification(user.email));
+      }
     } catch (error) {
       next(error);
     }
@@ -30,7 +33,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { email } = req.body;
-      const rta = await service.sendRecovery(email);
+      const rta = await authService.sendRecovery(email);
       res.json(rta);
     } catch (error) {
       next(error);
@@ -44,35 +47,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { token, password } = req.body;
-      const rta = await service.changePassword(token, password);
-      res.json(rta);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  '/email-verification',
-  validatorHandler(emailReqSchema, 'body'),
-  async (req, res, next) => {
-    try {
-      const { email } = req.body;
-      const rta = await service.sendEmailVerification(email);
-      res.json(rta);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  '/confirm-email',
-  validatorHandler(emailValidationSchema, 'body'),
-  async (req, res, next) => {
-    try {
-      const { token } = req.body;
-      const rta = await service.verifyEmail(token);
+      const rta = await authService.changePassword(token, password);
       res.json(rta);
     } catch (error) {
       next(error);
