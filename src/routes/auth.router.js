@@ -1,7 +1,11 @@
 const express = require('express');
 const passport = require('passport');
 const validatorHandler = require('../middlewares/validator.handler.js');
-const { emailReqSchema, passChangeSchema } = require('../schemas/user.schema');
+const {
+  emailReqSchema,
+  passChangeSchema,
+  tokenReqSchema,
+} = require('../schemas/user.schema');
 const AuthService = require('../services/auth.service');
 const UserService = require('../services/user.service');
 
@@ -21,6 +25,20 @@ router.post(
       } else {
         res.json(await userService.sendEmailVerification(user.email));
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/refresh',
+  validatorHandler(tokenReqSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { token } = req.body;
+      const rta = await authService.reAuthenticate(token);
+      res.json(rta);
     } catch (error) {
       next(error);
     }

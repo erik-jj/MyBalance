@@ -6,6 +6,7 @@ const { config } = require('../config/config.js');
 const signTokenAccount = require('../utils/jwt/token-sign-account');
 const signTokenRecovery = require('../utils/jwt/token-sign-recovery');
 const tokenVerifyRecovery = require('../utils/jwt/token-verify-recovery');
+const tokenVerifyAccount = require('../utils/jwt/token-verify-account');
 
 const service = new UserService();
 
@@ -23,11 +24,27 @@ class AuthService {
     }
     delete user.dataValues.password;
     delete user.dataValues.recoveryToken;
-
+    delete user.dataValues.emailToken;
     return user;
   }
 
+  async reAuthenticate(token) {
+    try {
+      const payload = tokenVerifyAccount(token);
+      const user = await service.findById(payload.sub);
+      if (!user) {
+        throw boom.unauthorized();
+      }
+      return this.signTokenAccount(user);
+    } catch (error) {
+      throw boom.unauthorized();
+    }
+  }
+
   signTokenAccount(user) {
+    delete user.dataValues.password;
+    delete user.dataValues.recoveryToken;
+    delete user.dataValues.emailToken;
     const payload = {
       sub: user.id,
       username: user.username,

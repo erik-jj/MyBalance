@@ -63,7 +63,7 @@ class UserService {
     }
     const payload = { sub: user.id };
     const token = signTokenEmail(payload);
-    const link = `${config.url}email-verification?token=${token}`;
+    const link = `${config.url}email-verify?token=${token}`;
     await this.update(user.id, { emailToken: token });
     const mail = {
       from: config.emailUser,

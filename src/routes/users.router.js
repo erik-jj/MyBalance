@@ -3,7 +3,7 @@ const UserService = require('../services/user.service.js');
 const validatorHandler = require('../middlewares/validator.handler.js');
 const {
   emailReqSchema,
-  emailValidationSchema,
+  tokenReqSchema,
   createUserSchema,
   getUserSchema,
 } = require('../schemas/user.schema.js');
@@ -84,7 +84,7 @@ router.post(
 
 router.post(
   '/confirm-email',
-  validatorHandler(emailValidationSchema, 'body'),
+  validatorHandler(tokenReqSchema, 'body'),
   async (req, res, next) => {
     try {
       const { token } = req.body;

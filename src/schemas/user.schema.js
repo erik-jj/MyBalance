@@ -30,7 +30,7 @@ const passChangeSchema = Joi.object({
   token: token.required(),
 });
 
-const emailValidationSchema = Joi.object({
+const tokenReqSchema = Joi.object({
   token: token.required(),
 });
 
@@ -40,5 +40,5 @@ module.exports = {
   getUserSchema,
   emailReqSchema,
   passChangeSchema,
-  emailValidationSchema,
+  tokenReqSchema,
 };
