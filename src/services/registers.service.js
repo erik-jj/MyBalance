@@ -2,42 +2,37 @@ const { models, fn, where, col } = require('../libs/sequelize.js');
 const { Op } = require('sequelize');
 const boom = require('@hapi/boom');
 const moment = require('moment');
-const UserService = require('./user.service');
-const service = new UserService();
 
 class RegisterService {
   constructor() {}
 
-  async create(data) {
+  async create(userId, data) {
+    const reason = await models.Reason.findOne({
+      where: {
+        id: data.idReason,
+        idUser: userId,
+      },
+    });
+    if (!reason) {
+      throw boom.unauthorized();
+    }
     if (data.amount == 0) {
       data.pending = true;
     }
-    const newRegister = await models.Register.create(data);
+    const newRegister = await models.Register.create({
+      ...data,
+      idUser: userId,
+    });
     return newRegister;
   }
 
-  async findById(id) {
-    const register = await models.Register.findByPk(id, {
-      include: [
-        {
-          association: 'reason',
-          attributes: ['isIncome', 'name'],
-        },
-      ],
-    });
-    if (!register) {
-      throw boom.notFound('Register not found');
-    }
-    return register;
-  }
-
   async findRegisters(userId, query) {
-    const user = await service.findByPk(userId);
+    const user = await models.User.findByPk(userId);
     if (!user) {
-      throw boom.notFound('User not found');
+      throw boom.unauthorized();
     }
     if (!user.verified) {
-      throw boom.notFound('user not found');
+      throw boom.unauthorized();
     }
     const options = {
       month: moment().month() + 1,
@@ -67,16 +62,52 @@ class RegisterService {
     return registers;
   }
 
-  async update(id, changes) {
-    const register = await this.findById(id);
+  async findById(id, userId) {
+    const options = {
+      where: {
+        id: id,
+        idUser: userId,
+      },
+      include: [
+        {
+          association: 'reason',
+          attributes: ['isIncome', 'name'],
+        },
+      ],
+    };
+
+    const register = await models.Register.findOne(options);
+    if (!register) {
+      throw boom.unauthorized();
+    }
+    return register;
+  }
+
+  async update(id, changes, userId) {
+    if (changes.idReason) {
+      await this.findUserReason(changes.idReason, userId);
+    }
+    const register = await this.findById(id, userId);
     const rta = await register.update(changes);
     return rta;
   }
 
-  async delete(id) {
-    const register = await this.findById(id);
+  async delete(id, userId) {
+    const register = await this.findById(id, userId);
     await register.destroy();
     return { id };
+  }
+
+  async findUserReason(idReason, userId) {
+    const reason = await models.Reason.findOne({
+      where: {
+        id: idReason,
+        idUser: userId,
+      },
+    });
+    if (!reason) {
+      throw boom.unauthorized();
+    }
   }
 }
 module.exports = RegisterService;

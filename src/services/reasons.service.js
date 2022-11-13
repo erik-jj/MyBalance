@@ -4,8 +4,8 @@ const boom = require('@hapi/boom');
 class ReasonService {
   constructor() {}
 
-  async create(data) {
-    const newReason = await models.Reason.create(data);
+  async create(user, data) {
+    const newReason = await models.Reason.create({ ...data, idUser: user.sub });
     return newReason;
   }
 
@@ -26,8 +26,13 @@ class ReasonService {
     return reasons;
   }
 
-  async findById(id) {
-    const reason = await models.Reason.findByPk(id);
+  async findById(id, userId) {
+    const reason = await models.Reason.findOne({
+      where: {
+        id: id,
+        idUser: userId,
+      },
+    });
     if (!reason) {
       throw boom.notFound('Reason not found');
     }
@@ -35,14 +40,14 @@ class ReasonService {
     return reason;
   }
 
-  async update(id, changes) {
-    const reason = await this.findById(id);
+  async update(id, changes, userId) {
+    const reason = await this.findById(id, userId);
     const rta = await reason.update(changes);
     return rta;
   }
 
-  async deactivate(id) {
-    const reason = await this.findById(id);
+  async deactivate(id,userId) {
+    const reason = await this.findById(id, userId);
     await reason.update({ isActive: false });
     return { id };
   }

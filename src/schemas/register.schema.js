@@ -3,7 +3,6 @@ const Joi = require('joi');
 const id = Joi.number().integer();
 const amount = Joi.number().min(0).max(9999999);
 const idReason = Joi.number().integer();
-const idUser = Joi.number().integer();
 
 const month = Joi.number().integer().min(1).max(12);
 const year = Joi.number().integer().min(2020).max(2050);
@@ -11,7 +10,6 @@ const year = Joi.number().integer().min(2020).max(2050);
 const createRegisterSchema = Joi.object({
   amount: amount.required(),
   idReason: idReason.required(),
-  idUser: idUser.required(),
 });
 
 const updateRegisterSchema = Joi.object({
