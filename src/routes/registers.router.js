@@ -27,6 +27,22 @@ router.get(
   }
 );
 
+router.get(
+  '/dashboard',
+  passport.authenticate('jwt', { session: false }),
+  validatorHandler(queryRegisterSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const user = req.user;
+      const registers = await service.loadDashboardData(user.sub);
+      res.json(registers);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+
 router.post(
   '/',
   passport.authenticate('jwt', { session: false }),

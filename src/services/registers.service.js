@@ -26,6 +26,77 @@ class RegisterService {
     return newRegister;
   }
 
+  async loadDashboardData(userId) {
+    const user = await models.User.findByPk(userId);
+    if (!user) {
+      throw boom.unauthorized();
+    }
+    if (!user.verified) {
+      throw boom.unauthorized();
+    }
+    const options = {
+      month: moment().month() + 1,
+      year: moment().year(),
+      where: {},
+      include: [
+        {
+          association: 'reason',
+          attributes: ['isIncome', 'name'],
+        },
+      ],
+    };
+    options.where = {
+      id_user: user.id,
+      [Op.and]: [
+        where(fn('month', col('create_at')), options.month),
+        where(fn('year', col('create_at')), options.year),
+      ],
+    };
+    const registers = await models.Register.findAll(options);
+    const lastMonthData = await this.loadLastMonthData(user.id);
+    const monthData = await this.getTotals(registers);
+    return {
+      graph: registers,
+      cards: { current: monthData, last: lastMonthData },
+    };
+  }
+  async loadLastMonthData(userId) {
+    const options = {
+      month: moment().month(),
+      year: moment().year(),
+      where: {},
+      include: [
+        {
+          association: 'reason',
+          attributes: ['isIncome', 'name'],
+        },
+      ],
+    };
+    options.where = {
+      id_user: userId,
+      [Op.and]: [
+        where(fn('month', col('create_at')), options.month),
+        where(fn('year', col('create_at')), options.year),
+      ],
+    };
+    const data = await models.Register.findAll(options);
+    const totals = await this.getTotals(data);
+    return totals;
+  }
+
+  async getTotals(registersArray) {
+    let monthIncome = 0;
+    let monthExpense = 0;
+    registersArray.map((register) => {
+      if (register.reason.isIncome) {
+        monthIncome = monthIncome + parseInt(register.amount);
+      } else {
+        monthExpense = monthExpense + parseInt(register.amount);
+      }
+    });
+    let monthBalance = monthIncome - monthExpense;
+    return { monthIncome, monthExpense, monthBalance };
+  }
   async findRegisters(userId, query) {
     const user = await models.User.findByPk(userId);
     if (!user) {
@@ -38,6 +109,12 @@ class RegisterService {
       month: moment().month() + 1,
       year: moment().year(),
       where: {},
+      include: [
+        {
+          association: 'reason',
+          attributes: ['isIncome', 'name'],
+        },
+      ],
     };
     const { month, year } = query;
     if (month && year) {
@@ -51,14 +128,7 @@ class RegisterService {
         where(fn('year', col('create_at')), options.year),
       ],
     };
-    const registers = await models.Register.findAll(options, {
-      include: [
-        {
-          association: 'reason',
-          attributes: ['isIncome', 'name'],
-        },
-      ],
-    });
+    const registers = await models.Register.findAll(options);
     return registers;
   }
 
@@ -75,7 +145,6 @@ class RegisterService {
         },
       ],
     };
-
     const register = await models.Register.findOne(options);
     if (!register) {
       throw boom.unauthorized();

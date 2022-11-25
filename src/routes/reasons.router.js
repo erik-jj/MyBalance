@@ -64,7 +64,7 @@ router.patch(
       const body = req.body;
       const { id } = req.params;
       const user = req.user;
-      const reason = await service.update(id, body,user.sub);
+      const reason = await service.update(id, body, user.sub);
       res.json(reason);
     } catch (error) {
       next(error);
