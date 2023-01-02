@@ -78,7 +78,7 @@ class AuthService {
     }
     const payload = { sub: user.id };
     const token = signTokenRecovery(payload);
-    const link = `${config.url}recovery?token=${token}`;
+    const link = `${config.url}password-change?token=${token}`;
     await service.update(user.id, { recoveryToken: token });
     const mail = {
       from: config.emailUser, // sender address
