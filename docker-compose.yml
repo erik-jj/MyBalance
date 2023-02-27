@@ -4,7 +4,7 @@ services:
     image: mysql:5
     environment:
     - MYSQL_DATABASE=balance
-    - MYSQL_USER=admin
+    - MYSQL_USER=root
     - MYSQL_ROOT_PASSWORD=admin123
     - MYSQL_PORT=3306
     ports:
