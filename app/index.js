@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 //cors config
-const whitelist = ['https://balanceapp.vercel.app/'];
+const whitelist = ['https://balanceapp.vercel.app'];
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
