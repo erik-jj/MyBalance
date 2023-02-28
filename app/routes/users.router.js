@@ -12,19 +12,16 @@ const {
 const router = express.Router();
 const service = new UserService();
 
-// router.get(
-//   '/:id',
-//   validatorHandler(getUserSchema, 'params'),
-//   async (req, res, next) => {
-//     try {
-//       const { id } = req.params;
-//       const user = await service.findById(id);
-//       res.status(200).json(user);
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// );
+ router.get(
+   '/check',
+  async (req, res, next) => {
+     try {
+       res.status(200).json("Check");
+     } catch (error) {
+       next(error);
+     }
+   }
+ );
 
 router.post(
   '/',
