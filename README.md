@@ -7,4 +7,4 @@ Emplea las tecnologias:
 * Sequelize
 
 ### Front-End
-Balance App https://github.com/erik-jj/balanceapp\
+Balance App https://github.com/erik-jj/balanceapp
